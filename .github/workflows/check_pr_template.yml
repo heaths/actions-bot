@@ -20,25 +20,19 @@ jobs:
 
     steps:
     - name: Check for placeholders
+      env:
+        PULL_REQUEST_BODY: ${{ github.event.pull_request.body }}
       run: |
-        IFS= read -r -d '' body <<'EOF'
-        ${{ github.event.pull_request.body }}
-        EOF
-        > /dev/null
-
-        if [[ $body =~ 🚨 ]]; then
+        if [[ $PULL_REQUEST_BODY =~ 🚨 ]]; then
           echo Please replace all placeholders containing 🚨
           exit 1
         fi
     - name: Check for required checkboxes
+      env:
+        PULL_REQUEST_BODY: ${{ github.event.pull_request.body }}
       run: |
-        IFS= read -r -d '' body <<'EOF'
-        ${{ github.event.pull_request.body }}
-        EOF
-        > /dev/null
-
         regex='\[ \] \*\*\(Required\)\*\*'
-        if [[ '${{ github.event.pull_request.body }}' =~ $regex ]]; then
+        if [[ $PULL_REQUEST_BODY =~ $regex ]]; then
           echo Please read and check all required checkboxes
           exit 1
         fi
