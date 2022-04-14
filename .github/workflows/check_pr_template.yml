@@ -21,13 +21,21 @@ jobs:
     steps:
     - name: Check for placeholders
       run: |
-        if [[ '${{ github.event.pull_request.body }}' =~ 🚨 ]]; then
+        IFS= read -r -d '' body <<'EOF'
+        ${{ github.event.pull_request.body }}
+        EOF
+
+        if [[ $body =~ 🚨 ]]; then
           echo Please replace all placeholders containing 🚨
           exit 1
         fi
     - name: Check for required checkboxes
       run: |
+        IFS= read -r -d '' body <<'EOF'
+        ${{ github.event.pull_request.body }}
+        EOF
         regex='\[ \] \*\*\(Required\)\*\*'
+
         if [[ '${{ github.event.pull_request.body }}' =~ $regex ]]; then
           echo Please read and check all required checkboxes
           exit 1
