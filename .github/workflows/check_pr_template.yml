@@ -1,0 +1,35 @@
+name: Validate PR template
+on:
+  pull_request:
+    types:
+    - opened
+    - edited
+    - reopened
+
+jobs:
+  check:
+    name: Validate
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    permissions:
+      pull-requests: read
+
+    steps:
+    - name: Check for placeholders
+      run: |
+        if [[ '${{ github.event.pull_request.body }}' =~ 🚨 ]]; then
+          echo Please replace all placeholders containing 🚨
+          exit 1
+        fi
+    - name: Check for required checkboxes
+      run: |
+        regex='\[ \] \*\*\(Required\)\*\*'
+        if [[ '${{ github.event.pull_request.body }}' =~ $regex ]]; then
+          echo Please read and check all required checkboxes
+          exit 1
+        fi
+
