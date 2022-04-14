@@ -24,16 +24,16 @@ jobs:
         PULL_REQUEST_BODY: ${{ github.event.pull_request.body }}
       run: |
         if [[ $PULL_REQUEST_BODY =~ 🚨 ]]; then
-          echo Please replace all placeholders containing 🚨
+          echo "::error::Please replace all placeholders containing 🚨"
           exit 1
         fi
     - name: Check for required checkboxes
       env:
         PULL_REQUEST_BODY: ${{ github.event.pull_request.body }}
       run: |
-        regex='\[ \] \*\*\(Required\)\*\*'
+        regex="\[ \] \*\*\(Required\)\*\*"
         if [[ $PULL_REQUEST_BODY =~ $regex ]]; then
-          echo Please read and check all required checkboxes
+          echo "::error::Please read and check all required checkboxes"
           exit 1
         fi
 
