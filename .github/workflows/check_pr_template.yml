@@ -24,6 +24,7 @@ jobs:
         IFS= read -r -d '' body <<'EOF'
         ${{ github.event.pull_request.body }}
         EOF
+        > /dev/null
 
         if [[ $body =~ 🚨 ]]; then
           echo Please replace all placeholders containing 🚨
@@ -34,8 +35,9 @@ jobs:
         IFS= read -r -d '' body <<'EOF'
         ${{ github.event.pull_request.body }}
         EOF
-        regex='\[ \] \*\*\(Required\)\*\*'
+        > /dev/null
 
+        regex='\[ \] \*\*\(Required\)\*\*'
         if [[ '${{ github.event.pull_request.body }}' =~ $regex ]]; then
           echo Please read and check all required checkboxes
           exit 1
